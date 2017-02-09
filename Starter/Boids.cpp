@@ -1082,21 +1082,8 @@ void drawBoid(int i)
 
  glPushMatrix();	// Save current transformation matrix
 			// Apply necessary transformations to this boid
+ gluSphere(my_quad,5,4,4); 
   glTranslatef(Boid_Location[i][0],Boid_Location[i][1],Boid_Location[i][2]);
-  // draw star shape by plotting its vertices in a line loop so that they are connected
-  glColor4f(1.0, 1.0, 0.0, 0.75);
-  glBegin (GL_LINE_LOOP); 
-    glVertex3f(1.9,3.0,0.0);
-    glVertex3f(0.0,2.1,0.0);
-    glVertex3f(-1.9,3.0,0.0);
-    glVertex3f(-1.6,0.9,0.0);
-    glVertex3f(-3.0,-0.7,0.0);
-    glVertex3f(-1.0,-1.1,0.0);
-    glVertex3f(0.0,-3.0,0.0);
-    glVertex3f(1.0,-1.1,0.0);
-    glVertex3f(3.0,-0.7,0.0);
-    glVertex3f(1.6,0.9,0.0);
-  glEnd();
  glPopMatrix();		// Restore transformation matrix so it's
 			// ready for the next boid.
 
