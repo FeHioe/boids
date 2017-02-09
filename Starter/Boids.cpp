@@ -626,31 +626,32 @@ void updateBoid(int i)
  // if you run into trouble, come to office
  // hours.
  ///////////////////////////////////////////
-  int total_nearby_boids = 0;
+  int close_boids = 0;
   float distance_Vector[3];
 
   // for rule 1
-  float total_distance[3];
-  total_distance[0] = 0;
-  total_distance[1] = 0;
-  total_distance[2] = 0;
-  float mass_center[3];
+  float V1[3];
+  V1[0] = 0;
+  V1[1] = 0;
+  V1[2] = 0;
 
   // for rule 2
   float V2[3];
+  V2[0] = 0;
+  V2[1] = 0;
+  V2[2] = 0;
 
   // for rule 3
-  float total_velocity[3];
-  total_velocity[0] = 0;
-  total_velocity[1] = 0;
-  total_velocity[2] = 0;
-  float average_velocity[3];
+  float V3[3];
+  V3[0] = 0;
+  V3[1] = 0;
+  V3[2] = 0;
 
   //for rule 0
-  float prev_velocity[3];
-  prev_velocity[0] = Boid_Velocity[i][0];
-  prev_velocity[1] = Boid_Velocity[i][1];
-  prev_velocity[2] = Boid_Velocity[i][2];
+  float original_velocity[3];
+  original_velocity[0] = Boid_Velocity[i][0];
+  original_velocity[1] = Boid_Velocity[i][1];
+  original_velocity[2] = Boid_Velocity[i][2];
 
  ///////////////////////////////////////////
  //
@@ -703,22 +704,22 @@ for (int j=0; j < nBoids; j++) {
 		+ pow(Boid_Location[j][1] - Boid_Location[i][1], 2) 
 		+ pow(Boid_Location[j][2] - Boid_Location[i][2], 2)) <= r_rule1) {
       
-    	total_nearby_boids += 1;
-    	total_distance[0] += Boid_Location[j][0];
-     	total_distance[1] += Boid_Location[j][1];
-      	total_distance[2] += Boid_Location[j][2];
+    	close_boids += 1;
+    	V1[0] += Boid_Location[j][0];
+     	V1[1] += Boid_Location[j][1];
+      V1[2] += Boid_Location[j][2];
     }
   }
 }
 
-if (total_nearby_boids > 0) {  
-  mass_center[0] = total_distance[0] / total_nearby_boids;
-  mass_center[1] = total_distance[1] / total_nearby_boids;
-  mass_center[2] = total_distance[2] / total_nearby_boids;
+if (close_boids != 0) {  
+  V1[0] = V1[0] / close_boids;
+  V1[1] = V1[1] / close_boids;
+  V1[2] = V1[2] / close_boids;
 
-  Boid_Velocity[i][0] += (mass_center[0] - Boid_Location[i][0]) * k_rule1;
-  Boid_Velocity[i][1] += (mass_center[1] - Boid_Location[i][1]) * k_rule1;
-  Boid_Velocity[i][2] += (mass_center[2] - Boid_Location[i][2]) * k_rule1;
+  Boid_Velocity[i][0] += (V1[0] - Boid_Location[i][0]) * k_rule1;
+  Boid_Velocity[i][1] += (V1[1] - Boid_Location[i][1]) * k_rule1;
+  Boid_Velocity[i][2] += (V1[2] - Boid_Location[i][2]) * k_rule1;
 }
 
  ///////////////////////////////////////////
@@ -751,17 +752,14 @@ if (total_nearby_boids > 0) {
 
 for (int j=0; j < nBoids; j++) {
   if (i != j) {
-    
     V2[0] = Boid_Location[j][0] - Boid_Location[i][0];
     V2[1] = Boid_Location[j][1] - Boid_Location[i][1];
     V2[2] = Boid_Location[j][2] - Boid_Location[i][2];
 
-    // if the distance from i to j is within the radius of r_rule2
-    if (sqrt(pow(V2[0], 2) + pow(V2[1], 2) + pow(V2[2], 2)) <= r_rule2) {
-      // update the velocity of boid i 
-      Boid_Velocity[i][0] -= k_rule2 * V2[0];
-      Boid_Velocity[i][1] -= k_rule2 * V2[1];
-      Boid_Velocity[i][2] -= k_rule2 * V2[2];
+    if (sqrt(pow(V2[0], 2) + pow(V2[1], 2) + pow(V2[2], 2)) < r_rule2) {
+      Boid_Velocity[i][0] -= V2[0] * k_rule2;
+      Boid_Velocity[i][1] -= V2[0] * k_rule2;
+      Boid_Velocity[i][2] -= V2[0] * k_rule2;
     }
   }
 }
@@ -793,34 +791,30 @@ for (int j=0; j < nBoids; j++) {
  // 10 <= r_rule3 <= 100
  // 0 <= k_rule3 <= 1
  ///////////////////////////////////////////
-total_nearby_boids = 0;
+close_boids = 0;
 for (int j=0; j < nBoids; j++) {
   if (i != j) {
-    distance_Vector[0] = Boid_Location[j][0] - Boid_Location[i][0];
-    distance_Vector[1] = Boid_Location[j][1] - Boid_Location[i][1];
-    distance_Vector[2] = Boid_Location[j][2] - Boid_Location[i][2];
 
-    // if the distance from i to j is within the radius of r_rule1
-    // include boid j when calculating the center of mass
-    if (sqrt(pow(distance_Vector[0], 2) + pow(distance_Vector[1], 2) + pow(distance_Vector[2], 2)) <= r_rule3) {
-      total_nearby_boids += 1;
-      total_velocity[0] += Boid_Velocity[j][0];
-      total_velocity[1] += Boid_Velocity[j][1];
-      total_velocity[2] += Boid_Velocity[j][2];
+    if (sqrt(pow(Boid_Location[j][0] - Boid_Location[i][0], 2) 
+      + pow(Boid_Location[j][1] - Boid_Location[i][1], 2) 
+      + pow(Boid_Location[j][2] - Boid_Location[i][2], 2)) <= r_rule3) {
+
+      close_boids += 1;
+      V3[0] += Boid_Velocity[j][0];
+      V3[1] += Boid_Velocity[j][1];
+      V3[2] += Boid_Velocity[j][2];
     }
   }
 }
 
-if (total_nearby_boids != 0) {  
-  average_velocity[0] = total_velocity[0] / total_nearby_boids;
-  average_velocity[1] = total_velocity[1] / total_nearby_boids;
-  average_velocity[2] = total_velocity[2] / total_nearby_boids;
+if (close_boids != 0) {  
+  V3[0] = V3[0] / close_boids;
+  V3[1] = V3[1] / close_boids;
+  V3[2] = V3V3[2] / close_boids;
 
-  // update the velocity of boid i toward the center of mass 
-  // following the formula given in pseudo code by Conrad Parker
-  Boid_Velocity[i][0] += k_rule3 * average_velocity[0];
-  Boid_Velocity[i][1] += k_rule3 * average_velocity[1];
-  Boid_Velocity[i][2] += k_rule3 * average_velocity[2];
+  Boid_Velocity[i][0] += k_rule3 * V3[0];
+  Boid_Velocity[i][1] += k_rule3 * V3[1];
+  Boid_Velocity[i][2] += k_rule3 * V3[2];
 }
  ///////////////////////////////////////////
  // Enforcing bounds on motion
@@ -932,9 +926,9 @@ if (total_nearby_boids != 0) {
  // QUESTION: Why add inertia at the end and
  //  not at the beginning?
  ///////////////////////////////////////////
- Boid_Velocity[i][0] -= k_rule0 * prev_velocity[0];
- Boid_Velocity[i][1] -= k_rule0 * prev_velocity[1];
- Boid_Velocity[i][2] -= k_rule0 * prev_velocity[2];
+ Boid_Velocity[i][0] -= k_rule0 * original_velocity[0];
+ Boid_Velocity[i][1] -= k_rule0 * original_velocity[1];
+ Boid_Velocity[i][2] -= k_rule0 * original_velocity[2];
 
  ///////////////////////////////////////////
  //
