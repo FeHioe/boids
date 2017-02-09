@@ -702,7 +702,7 @@ for (int j=0; j < nBoids; j++) {
   if (i != j) {
     if (sqrt(pow(Boid_Location[j][0] - Boid_Location[i][0], 2) 
 		+ pow(Boid_Location[j][1] - Boid_Location[i][1], 2) 
-		+ pow(Boid_Location[j][2] - Boid_Location[i][2], 2)) <= pow(r_rule1, 2)) {
+		+ pow(Boid_Location[j][2] - Boid_Location[i][2], 2)) <= r_rule1) {
       
     	close_boids += 1;
     	V1[0] += Boid_Location[j][0];
@@ -797,7 +797,7 @@ for (int j=0; j < nBoids; j++) {
 
     if (sqrt(pow(Boid_Location[j][0] - Boid_Location[i][0], 2) 
       + pow(Boid_Location[j][1] - Boid_Location[i][1], 2) 
-      + pow(Boid_Location[j][2] - Boid_Location[i][2], 2)) <= pow(r_rule3, 2)) {
+      + pow(Boid_Location[j][2] - Boid_Location[i][2], 2)) <= r_rule3) {
 
       close_boids += 1;
       V3[0] += Boid_Velocity[j][0];
