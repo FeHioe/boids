@@ -1082,8 +1082,27 @@ void drawBoid(int i)
 
  glPushMatrix();	// Save current transformation matrix
 			// Apply necessary transformations to this boid
- gluSphere(my_quad,5,4,4); 
   glTranslatef(Boid_Location[i][0],Boid_Location[i][1],Boid_Location[i][2]);
+
+      glRotatef(290.0, 1.0, 0.0, 0.0);
+      glBegin(GL_TRIANGLE_STRIP);
+      /* left wing */
+      glColor3f(Boid_Color[i][0],Boid_Color[i][1],Boid_Color[i][2]);
+      glVertex3f(-7.0, 0.0, 2.0);
+      glVertex3f(-1.0, 0.0, 3.0);
+      glVertex3f(-1.0, 7.0, 3.0);
+      /* left side */
+      glColor4f(Boid_Color[i][0],Boid_Color[i][1],Boid_Color[i][2], 0.7);
+      glVertex3f(0.0, 0.0, 0.0);
+      glVertex3f(0.0, 8.0, 0.0);
+      /* right side */
+      glVertex3f(1.0, 0.0, 3.0);
+      glVertex3f(1.0, 7.0, 3.0);
+      /* final tip of right wing */
+      glColor3f(Boid_Color[i][0],Boid_Color[i][1],Boid_Color[i][2]);
+      glVertex3f(7.0, 0.0, 2.0);
+      glEnd();
+  
  glPopMatrix();		// Restore transformation matrix so it's
 			// ready for the next boid.
 
