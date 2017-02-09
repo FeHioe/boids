@@ -810,7 +810,7 @@ for (int j=0; j < nBoids; j++) {
 if (close_boids != 0) {  
   V3[0] = V3[0] / close_boids;
   V3[1] = V3[1] / close_boids;
-  V3[2] = V3V3[2] / close_boids;
+  V3[2] = V3[2] / close_boids;
 
   Boid_Velocity[i][0] += k_rule3 * V3[0];
   Boid_Velocity[i][1] += k_rule3 * V3[1];
