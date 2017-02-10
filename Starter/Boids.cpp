@@ -809,6 +809,11 @@ for (int j=0; j < nBoids; j++) {
 
 // Get average velocity within r_rule3
 close_boids = 0;
+float center[3];
+center[0] = 0;
+center[1] = 0;
+center[2] = 0;
+
 for (int j=0; j < nBoids; j++) {
   if (i != j) {
 
@@ -817,6 +822,9 @@ for (int j=0; j < nBoids; j++) {
       + pow(Boid_Location[j][2] - Boid_Location[i][2], 2));
 
     if (distance <= r_rule3) {
+      center[0] += Boid_Location[j][0];
+      center[1] += Boid_Location[j][1];
+      center[2] += Boid_Location[j][2];
 
       close_boids += 1;
       V3[0] += Boid_Velocity[j][0];
@@ -833,7 +841,9 @@ if (close_boids != 0) {
   V3[2] = V3[2] / close_boids;
 
   // Calculate weight 
-  float weight_k3 = (r_rule3 - distance) / r_rule3;
+  float weight_k3 = (r_rule3 - sqrt(pow(center[0] - Boid_Location[i][0], 2) 
+      + pow(center[1] - Boid_Location[i][1], 2) 
+      + pow(center[2] - Boid_Location[i][2], 2))) / r_rule3;
 
   // Update boid velocity
   Boid_Velocity[i][0] += k_rule3 * V3[0] * weight_k3;
