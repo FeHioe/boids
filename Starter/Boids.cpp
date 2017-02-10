@@ -646,6 +646,7 @@ void updateBoid(int i)
   V3[1] = 0;
   V3[2] = 0;
 
+  // Rule 0
   float original_velocity[3];
   original_velocity[0] = Boid_Velocity[i][0];
   original_velocity[1] = Boid_Velocity[i][1];
