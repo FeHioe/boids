@@ -770,7 +770,7 @@ for (int j=0; j < nBoids; j++) {
     if (distance <= r_rule2) {
 
       // Calculate weight
-      float weight_k2 = distance / r_rule2;
+      float weight_k2 = (r_rule2 - distance) / r_rule2;
 
       Boid_Velocity[i][0] -= V2[0] * k_rule2 * weight_k2;
       Boid_Velocity[i][1] -= V2[1] * k_rule2 * weight_k2;
@@ -833,7 +833,7 @@ if (close_boids != 0) {
   V3[2] = V3[2] / close_boids;
 
   // Calculate weight 
-  float weight_k3 = distance / r_rule3;
+  float weight_k3 = (r_rule3 - distance) / r_rule3;
 
   // Update boid velocity
   Boid_Velocity[i][0] += k_rule3 * V3[0] * weight_k3;
