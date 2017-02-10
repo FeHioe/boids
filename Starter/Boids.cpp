@@ -627,6 +627,7 @@ void updateBoid(int i)
  // hours.
  ///////////////////////////////////////////
   int close_boids = 0;
+  int distance = 0;
 
   // Rule 1
   float V1[3];
@@ -701,9 +702,12 @@ void updateBoid(int i)
 // Get the center of mass for all boids within r_rule1
 for (int j=0; j < nBoids; j++) {
   if (i != j) {
-    if (sqrt(pow(Boid_Location[j][0] - Boid_Location[i][0], 2) 
-		+ pow(Boid_Location[j][1] - Boid_Location[i][1], 2) 
-		+ pow(Boid_Location[j][2] - Boid_Location[i][2], 2)) <= r_rule1) {
+
+    distance = sqrt(pow(Boid_Location[j][0] - Boid_Location[i][0], 2) 
+    + pow(Boid_Location[j][1] - Boid_Location[i][1], 2) 
+    + pow(Boid_Location[j][2] - Boid_Location[i][2], 2));
+
+    if (distance <= r_rule1) {
       
     	close_boids += 1;
     	V1[0] += Boid_Location[j][0];
@@ -719,10 +723,13 @@ if (close_boids != 0) {
   V1[1] = V1[1] / close_boids;
   V1[2] = V1[2] / close_boids;
 
+  // Calculate weight
+  float weight_k1 = distance / r_rule1;
+
   // Move towards center of mass
-  Boid_Velocity[i][0] += (V1[0] - Boid_Location[i][0]) * k_rule1;
-  Boid_Velocity[i][1] += (V1[1] - Boid_Location[i][1]) * k_rule1;
-  Boid_Velocity[i][2] += (V1[2] - Boid_Location[i][2]) * k_rule1;
+  Boid_Velocity[i][0] += (V1[0] - Boid_Location[i][0]) * k_rule1 * weight_k1;
+  Boid_Velocity[i][1] += (V1[1] - Boid_Location[i][1]) * k_rule1 * weight_k1;
+  Boid_Velocity[i][2] += (V1[2] - Boid_Location[i][2]) * k_rule1 * weight_k1;
 }
 
  ///////////////////////////////////////////
@@ -759,10 +766,15 @@ for (int j=0; j < nBoids; j++) {
     V2[1] = Boid_Location[j][1] - Boid_Location[i][1];
     V2[2] = Boid_Location[j][2] - Boid_Location[i][2];
 
-    if (sqrt(pow(V2[0], 2) + pow(V2[1], 2) + pow(V2[2], 2)) <= r_rule2) {
-      Boid_Velocity[i][0] -= V2[0] * k_rule2;
-      Boid_Velocity[i][1] -= V2[1] * k_rule2;
-      Boid_Velocity[i][2] -= V2[2] * k_rule2;
+    distance = sqrt(pow(V2[0], 2) + pow(V2[1], 2) + pow(V2[2], 2));
+    if (distance <= r_rule2) {
+
+      // Calculate weight
+      float weight_k2 = distance / r_rule2;
+
+      Boid_Velocity[i][0] -= V2[0] * k_rule2 * weight_k2;
+      Boid_Velocity[i][1] -= V2[1] * k_rule2 * weight_k2;
+      Boid_Velocity[i][2] -= V2[2] * k_rule2 * weight_k2;
     }
   }
 }
@@ -800,9 +812,11 @@ close_boids = 0;
 for (int j=0; j < nBoids; j++) {
   if (i != j) {
 
-    if (sqrt(pow(Boid_Location[j][0] - Boid_Location[i][0], 2) 
+    distance = sqrt(pow(Boid_Location[j][0] - Boid_Location[i][0], 2) 
       + pow(Boid_Location[j][1] - Boid_Location[i][1], 2) 
-      + pow(Boid_Location[j][2] - Boid_Location[i][2], 2)) <= r_rule3) {
+      + pow(Boid_Location[j][2] - Boid_Location[i][2], 2));
+
+    if (distance <= r_rule3) {
 
       close_boids += 1;
       V3[0] += Boid_Velocity[j][0];
@@ -818,10 +832,13 @@ if (close_boids != 0) {
   V3[1] = V3[1] / close_boids;
   V3[2] = V3[2] / close_boids;
 
+  // Calculate weight 
+  float weight_k3 = distance / r_rule3;
+
   // Update boid velocity
-  Boid_Velocity[i][0] += k_rule3 * V3[0];
-  Boid_Velocity[i][1] += k_rule3 * V3[1];
-  Boid_Velocity[i][2] += k_rule3 * V3[2];
+  Boid_Velocity[i][0] += k_rule3 * V3[0] * weight_k3;
+  Boid_Velocity[i][1] += k_rule3 * V3[1] * weight_k3;
+  Boid_Velocity[i][2] += k_rule3 * V3[2] * weight_k3;
 }
  ///////////////////////////////////////////
  // Enforcing bounds on motion
