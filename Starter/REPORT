@@ -6,17 +6,29 @@ __________________________________________________________________
 1) Describe *briefly* and *concisely* what parts of the assignment
    you found easier, harder, and/or tricky to get right
 
-
+Adding the controllers for each rule was easier since an example was 
+already given. Harder parts of the assignment was drawing the boids, 
+and the tricky parts were figuring out how to apply the given pseudocode
+into rule 1, 2, and 3.
 
 
 __________________________________________________________________
 2) Answer any //QUESTION: items noted in the code
 
+Is this the optimal way to implement this rule? can you see any 
+problems or ways to improve this bit?
+
+This is not the optimal way to implement the rule, since each boid
+has to iterate through the other boids. This can cause a longer 
+program runtime. The runtime would improve if there was a different
+way to calculate the center of mass without having to use a loop
+for each boid.
 
 
+Why add inertia at the end and not at the beginning?
 
-
-
+If we add inertia in the beginning, then the rules would be applied 
+to the inertia velocity instead of boid velocity.
 
 __________________________________________________________________
 3) Describe any //CRUNCHY: extensions you implemented
@@ -32,7 +44,13 @@ __________________________________________________________________
 a) What is the time complexity of the boid update (in big Oh notation),
    justify.
 
+The time complexity is big O(n^2) since for each boid we are iterating 
+over all the boids.
+
 b) What could you do to make the update more efficient?
+
+We can create a data structure that can track which boids are in the 
+distance of the current boid. 
 
 c) What is the greatest bottleneck of the program:
 
@@ -41,9 +59,17 @@ c) What is the greatest bottleneck of the program:
 
     Why is that? justify your answer.
 
+Boid update is the greatest bottleneck of the program because the 
+function needs O(n^2) time to run, while each draw transformation 
+takes a constant time to run.
+
 d) How would you adapt the idea behind Boids to swarms of running
    creatures (e.g. a herd of charging animals, an army of CGI
    monsters, a crowd of simulated humans walking). Think of the
    specific conditions you would need to add to the simulation
    that are different from your Boids implementation
 
+Our current boids move while floating. Ie. there is no gravity and
+movement is similar to flying in the air or swimming in water. For 
+running creatures, we would have to modify the boids to move on a 
+surface with gravity applied down to them. 

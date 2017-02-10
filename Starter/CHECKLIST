@@ -1,9 +1,9 @@
 CSC 418 - Winter 2017 - Assignment 1 Checklist/Grading sheet
 _____________________________________________________________________________
 
-Name: 
-Student ID:
-CDF user name (UTORid):
+Name: Felicia hioe
+Student ID: 1000526111
+CDF user name (UTORid): hioefeli
 
 (failure to provide name and student ID will cost you marks)
 _____________________________________________________________________________ 
@@ -15,13 +15,13 @@ A. PLEASE ANSWER THE FOLLOWING QUESTIONS (your assignment will not be
    UofT Code of Behaviour on Academic Matters found at
    http://www.governingcouncil.utoronto.ca/policies/behaveac.htm
 
-   ___Yes   ___No
+   _x_Yes   ___No
 
 
 2. I collaborated on this assignment with another student or borrowed 
    code from another source 
 
-   ___Yes   ___No
+   ___Yes   _x_No
 
    If Yes, you must clearly note in your program which parts are 
    common/borrowed and which are yours, failure to do so will be 
@@ -43,7 +43,7 @@ B. PLACE AN (X) IN THE CORRESPONDING PLACE. For any partially completed
 Description/value		Completed	Partial	    Not done	Mark
 
 * Add conttrols for the
-  variables that affect
+  variables that affect     X
   Boid motion:
   k_rule1, k_rule2, k_rule3,
   k_rule0, r_rule2, r_rule3
@@ -51,32 +51,32 @@ Description/value		Completed	Partial	    Not done	Mark
   (5 marks)
 
 * Correctly implemented
-  (working!) Boid update
+  (working!) Boid update    X
   rule 1
   (5 marks)
 
 * Correctly implemented
-  (working) Boid update
+  (working) Boid update     X
   rule 2
   (5 marks)
 
 * Correctly implemented
-  (working) Boid update
+  (working) Boid update     X
   rule 3   
   (5 marks)
 
 * Correctly implemented
-  (working) Boid update
+  (working) Boid update     X
   rule 0 (Paco's rule)
   (5 marks)
 
 * Correctly implemented
-  Boid position update
+  Boid position update      X
   (5 marks)
 
 * Completed boid drawing
   function with something
-  that is not a simple
+  that is not a simple      X
   sphere, single polygon,
   or GLUT primitive shape.
   (5 marks)
