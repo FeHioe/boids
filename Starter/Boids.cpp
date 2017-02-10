@@ -627,27 +627,25 @@ void updateBoid(int i)
  // hours.
  ///////////////////////////////////////////
   int close_boids = 0;
-  float distance_Vector[3];
 
-  // for rule 1
+  // Rule 1
   float V1[3];
   V1[0] = 0;
   V1[1] = 0;
   V1[2] = 0;
 
-  // for rule 2
+  // Rule 2
   float V2[3];
   V2[0] = 0;
   V2[1] = 0;
   V2[2] = 0;
 
-  // for rule 3
+  // Rule 3
   float V3[3];
   V3[0] = 0;
   V3[1] = 0;
   V3[2] = 0;
 
-  //for rule 0
   float original_velocity[3];
   original_velocity[0] = Boid_Velocity[i][0];
   original_velocity[1] = Boid_Velocity[i][1];
@@ -698,6 +696,8 @@ void updateBoid(int i)
  // to improve this bit?
  ///////////////////////////////////////////
 
+
+// Get the center of mass for all boids within r_rule1
 for (int j=0; j < nBoids; j++) {
   if (i != j) {
     if (sqrt(pow(Boid_Location[j][0] - Boid_Location[i][0], 2) 
@@ -713,10 +713,12 @@ for (int j=0; j < nBoids; j++) {
 }
 
 if (close_boids != 0) {  
+  // Compute center of mass
   V1[0] = V1[0] / close_boids;
   V1[1] = V1[1] / close_boids;
   V1[2] = V1[2] / close_boids;
 
+  // Move towards center of mass
   Boid_Velocity[i][0] += (V1[0] - Boid_Location[i][0]) * k_rule1;
   Boid_Velocity[i][1] += (V1[1] - Boid_Location[i][1]) * k_rule1;
   Boid_Velocity[i][2] += (V1[2] - Boid_Location[i][2]) * k_rule1;
@@ -756,10 +758,10 @@ for (int j=0; j < nBoids; j++) {
     V2[1] = Boid_Location[j][1] - Boid_Location[i][1];
     V2[2] = Boid_Location[j][2] - Boid_Location[i][2];
 
-    if (sqrt(pow(V2[0], 2) + pow(V2[1], 2) + pow(V2[2], 2)) < r_rule2) {
+    if (sqrt(pow(V2[0], 2) + pow(V2[1], 2) + pow(V2[2], 2)) <= r_rule2) {
       Boid_Velocity[i][0] -= V2[0] * k_rule2;
-      Boid_Velocity[i][1] -= V2[0] * k_rule2;
-      Boid_Velocity[i][2] -= V2[0] * k_rule2;
+      Boid_Velocity[i][1] -= V2[1] * k_rule2;
+      Boid_Velocity[i][2] -= V2[2] * k_rule2;
     }
   }
 }
@@ -791,6 +793,8 @@ for (int j=0; j < nBoids; j++) {
  // 10 <= r_rule3 <= 100
  // 0 <= k_rule3 <= 1
  ///////////////////////////////////////////
+
+// Get average velocity within r_rule3
 close_boids = 0;
 for (int j=0; j < nBoids; j++) {
   if (i != j) {
@@ -808,10 +812,12 @@ for (int j=0; j < nBoids; j++) {
 }
 
 if (close_boids != 0) {  
+  // Compute average velocity 
   V3[0] = V3[0] / close_boids;
   V3[1] = V3[1] / close_boids;
   V3[2] = V3[2] / close_boids;
 
+  // Update boid velocity
   Boid_Velocity[i][0] += k_rule3 * V3[0];
   Boid_Velocity[i][1] += k_rule3 * V3[1];
   Boid_Velocity[i][2] += k_rule3 * V3[2];
