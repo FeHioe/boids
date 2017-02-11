@@ -143,6 +143,8 @@ void updateBoid(int i);
 void drawBoid(int i);
 void HSV2RGB(float H, float S, float V, float *R, float *G, float *B);
 
+float getDistance(float p1[3], float p2[3]);
+
 // ******************** FUNCTIONS ************************
 
 /*
@@ -579,6 +581,10 @@ void WindowDisplay(void)
   // Tell glut window to update itself
   glutSetWindow(windowID);
   glutPostRedisplay();
+}
+
+float getDistance(float p1[3], float p2[3]){
+  return sqrt(pow(p1[0]-p2[0], 2)+pow(p1[1]-p2[1], 2)+pow(p1[2]-p2[2], 2));
 }
 
 void updateBoid(int i)
