@@ -626,32 +626,12 @@ void updateBoid(int i)
  // if you run into trouble, come to office
  // hours.
  ///////////////////////////////////////////
-  int close_boids = 0;
-
-  // Rule 1
-  float V1[3];
-  V1[0] = 0;
-  V1[1] = 0;
-  V1[2] = 0;
-
-  // Rule 2
-  float V2[3];
-  V2[0] = 0;
-  V2[1] = 0;
-  V2[2] = 0;
-
-  // Rule 3
-  float V3[3];
-  V3[0] = 0;
-  V3[1] = 0;
-  V3[2] = 0;
-
-  // Rule 0
-  float original_velocity[3];
-  original_velocity[0] = Boid_Velocity[i][0];
-  original_velocity[1] = Boid_Velocity[i][1];
-  original_velocity[2] = Boid_Velocity[i][2];
-
+  float init_velocity[3];
+  init_velocity[0] = Boid_Velocity[i][0];
+  init_velocity[1] = Boid_Velocity[i][1];
+  init_velocity[2] = Boid_Velocity[i][2];
+  
+  float distances[nBoids];   
  ///////////////////////////////////////////
  //
  // TO DO:
@@ -698,32 +678,38 @@ void updateBoid(int i)
  ///////////////////////////////////////////
 
 
-// Get the center of mass for all boids within r_rule1
-for (int j=0; j < nBoids; j++) {
-  if (i != j) {
-    if (sqrt(pow(Boid_Location[j][0] - Boid_Location[i][0], 2) 
-		+ pow(Boid_Location[j][1] - Boid_Location[i][1], 2) 
-		+ pow(Boid_Location[j][2] - Boid_Location[i][2], 2)) <= r_rule1) {
-      
-    	close_boids += 1;
-    	V1[0] += Boid_Location[j][0];
-     	V1[1] += Boid_Location[j][1];
-      V1[2] += Boid_Location[j][2];
+  float center[3];
+  center[0] = 0;
+  center[1] = 0;
+  center[2] = 0;
+  int count = 0;
+
+  for (int j = 0; j < nBoids; j++){
+    if (j != i){
+      distances[j] = getDistance(Boid_Location[j], Boid_Location[i]);
+      if (distances[j] <= r_rule1){
+        center[0] += Boid_Location[j][0];
+        center[1] += Boid_Location[j][1];
+        center[2] += Boid_Location[j][2];
+        count++;
+      }
     }
   }
-}
-
-if (close_boids != 0) {  
-  // Compute center of mass
-  V1[0] = V1[0] / close_boids;
-  V1[1] = V1[1] / close_boids;
-  V1[2] = V1[2] / close_boids;
-
-  // Move towards center of mass
-  Boid_Velocity[i][0] += (V1[0] - Boid_Location[i][0]) * k_rule1;
-  Boid_Velocity[i][1] += (V1[1] - Boid_Location[i][1]) * k_rule1;
-  Boid_Velocity[i][2] += (V1[2] - Boid_Location[i][2]) * k_rule1;
-}
+  
+  if (count == 0){
+    center[0] = Boid_Location[i][0];
+    center[1] = Boid_Location[i][1];
+    center[2] = Boid_Location[i][2];
+  }
+  else{
+    center[0] = center[0] / count;
+    center[1] = center[1] / count;
+    center[2] = center[2] / count;
+  }
+  
+  Boid_Velocity[i][0] += (center[0] - Boid_Location[i][0]) * k_rule1;
+  Boid_Velocity[i][1] += (center[1] - Boid_Location[i][1]) * k_rule1;
+  Boid_Velocity[i][2] += (center[2] - Boid_Location[i][2]) * k_rule1;
 
  ///////////////////////////////////////////
  //
@@ -753,19 +739,16 @@ if (close_boids != 0) {
  //  0 <= k_rule2 <= 1
  ///////////////////////////////////////////
 
-for (int j=0; j < nBoids; j++) {
-  if (i != j) {
-    V2[0] = Boid_Location[j][0] - Boid_Location[i][0];
-    V2[1] = Boid_Location[j][1] - Boid_Location[i][1];
-    V2[2] = Boid_Location[j][2] - Boid_Location[i][2];
-
-    if (sqrt(pow(V2[0], 2) + pow(V2[1], 2) + pow(V2[2], 2)) <= r_rule2) {
-      Boid_Velocity[i][0] -= V2[0] * k_rule2;
-      Boid_Velocity[i][1] -= V2[1] * k_rule2;
-      Boid_Velocity[i][2] -= V2[2] * k_rule2;
+  for (int j = 0; j < nBoids; j++){
+    if (j != i){
+      if (distances[j] <= r_rule2){
+        Boid_Velocity[i][0] -=  k_rule2 * (Boid_Location[j][0] - Boid_Location[i][0]);
+        Boid_Velocity[i][1] -=  k_rule2 * (Boid_Location[j][1] - Boid_Location[i][1]);
+        Boid_Velocity[i][2] -=  k_rule2 * (Boid_Location[j][2] - Boid_Location[i][2]);
+      }
     }
   }
-}
+
 
  ///////////////////////////////////////////
  //
@@ -795,34 +778,36 @@ for (int j=0; j < nBoids; j++) {
  // 0 <= k_rule3 <= 1
  ///////////////////////////////////////////
 
-// Get average velocity within r_rule3
-close_boids = 0;
-for (int j=0; j < nBoids; j++) {
-  if (i != j) {
-
-    if (sqrt(pow(Boid_Location[j][0] - Boid_Location[i][0], 2) 
-      + pow(Boid_Location[j][1] - Boid_Location[i][1], 2) 
-      + pow(Boid_Location[j][2] - Boid_Location[i][2], 2)) <= r_rule3) {
-
-      close_boids += 1;
-      V3[0] += Boid_Velocity[j][0];
-      V3[1] += Boid_Velocity[j][1];
-      V3[2] += Boid_Velocity[j][2];
+  float v3[3];
+  v3[0] = 0;
+  v3[1] = 0;
+  v3[2] = 0;
+  count = 0;
+  
+  for (int j = 0; j < nBoids; j++){
+    if ((j != i) and (distances[j] <= r_rule3)){
+      v3[0] += Boid_Velocity[j][0];
+      v3[1] += Boid_Velocity[j][1];
+      v3[2] += Boid_Velocity[j][2];
+      count++;
     }
   }
-}
+  
+  if (count == 0){
+    v3[0] = Boid_Velocity[i][0];
+    v3[1] = Boid_Velocity[i][1];
+    v3[2] = Boid_Velocity[i][2];
+  }
+  else{
+    v3[0] = v3[0] / count;
+    v3[1] = v3[1] / count;
+    v3[2] = v3[2] / count;
+  }
+  
+  Boid_Velocity[i][0] += k_rule3 * (v3[0] - init_velocity[0]);
+  Boid_Velocity[i][1] += k_rule3 * (v3[1] - init_velocity[1]);
+  Boid_Velocity[i][2] += k_rule3 * (v3[2] - init_velocity[2]);
 
-if (close_boids != 0) {  
-  // Compute average velocity 
-  V3[0] = V3[0] / close_boids;
-  V3[1] = V3[1] / close_boids;
-  V3[2] = V3[2] / close_boids;
-
-  // Update boid velocity
-  Boid_Velocity[i][0] += k_rule3 * V3[0];
-  Boid_Velocity[i][1] += k_rule3 * V3[1];
-  Boid_Velocity[i][2] += k_rule3 * V3[2];
-}
  ///////////////////////////////////////////
  // Enforcing bounds on motion
  //
@@ -906,9 +891,9 @@ if (close_boids != 0) {
  //  The speed clamping used here was determined
  // 'experimentally', i.e. I tweaked it by hand!
  ///////////////////////////////////////////
- Boid_Velocity[i][0]=sign(Boid_Velocity[i][0])*sqrt(fabs(Boid_Velocity[i][0]));
- Boid_Velocity[i][1]=sign(Boid_Velocity[i][1])*sqrt(fabs(Boid_Velocity[i][1]));
- Boid_Velocity[i][2]=sign(Boid_Velocity[i][2])*sqrt(fabs(Boid_Velocity[i][2]));
+ Boid_Velocity[i][0]=sign(Boid_Velocity[i][0])*sqrt(fabs(Boid_Velocity[i][0])/5);
+ Boid_Velocity[i][1]=sign(Boid_Velocity[i][1])*sqrt(fabs(Boid_Velocity[i][1])/5);
+ Boid_Velocity[i][2]=sign(Boid_Velocity[i][2])*sqrt(fabs(Boid_Velocity[i][2])/5);
 
  ///////////////////////////////////////////
  //
@@ -933,9 +918,9 @@ if (close_boids != 0) {
  // QUESTION: Why add inertia at the end and
  //  not at the beginning?
  ///////////////////////////////////////////
- Boid_Velocity[i][0] -= k_rule0 * original_velocity[0];
- Boid_Velocity[i][1] -= k_rule0 * original_velocity[1];
- Boid_Velocity[i][2] -= k_rule0 * original_velocity[2];
+  Boid_Velocity[i][0] += k_rule0 * init_velocity[0];
+  Boid_Velocity[i][1] += k_rule0 * init_velocity[1];
+  Boid_Velocity[i][2] += k_rule0 * init_velocity[2];
 
  ///////////////////////////////////////////
  //
@@ -1093,6 +1078,7 @@ void drawBoid(int i)
 
       glRotatef(290.0, 1.0, 0.0, 0.0);
       glBegin(GL_TRIANGLE_STRIP);
+      /* left wing */
       glColor3f(Boid_Color[i][0],Boid_Color[i][1],Boid_Color[i][2]);
       glVertex3f(-7.0, 0.0, 2.0);
       glVertex3f(-1.0, 0.0, 3.0);
