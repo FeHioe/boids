@@ -3,61 +3,61 @@
 
                      Boids.cpp
 
-	This assignment will help you become familiar with
-	the basic structure and shape of an OpenGL program.
+  This assignment will help you become familiar with
+  the basic structure and shape of an OpenGL program.
 
-	Please take time to read through the code and note
-	how the viewing parameters, viewing volume, and
-	general OpenGL options are set. You will need to
-	change those in future assignments.
+  Please take time to read through the code and note
+  how the viewing parameters, viewing volume, and
+  general OpenGL options are set. You will need to
+  change those in future assignments.
 
-	You should also pay attention to the way basic
-	OpenGL drawing commands work and what they do.
+  You should also pay attention to the way basic
+  OpenGL drawing commands work and what they do.
         You should check the OpenGL reference manual
         for the different OpenGL functions you will
         find here. In particular, those that set up
         the viewing parameters.
 
-	Note that this program is intended to display
-	moving objects in real time. As such, it is
-	strongly recommended that you run this code locally,
-	on one of the machines at the CS lab. Alternately,
-	install the OpenGL libraries on your own computer.
+  Note that this program is intended to display
+  moving objects in real time. As such, it is
+  strongly recommended that you run this code locally,
+  on one of the machines at the CS lab. Alternately,
+  install the OpenGL libraries on your own computer.
 
-	Working remotely over ssh, or working on a non-
-	Linux machine will give you headaches.
+  Working remotely over ssh, or working on a non-
+  Linux machine will give you headaches.
 
     Instructions:
 
-	The assignment handout contains a detailed
-	description of what you need to do. Please be
-	sure to read it carefully.
+  The assignment handout contains a detailed
+  description of what you need to do. Please be
+  sure to read it carefully.
 
-	You must complete all sections marked
+  You must complete all sections marked
         // TO DO
 
-	In addition to this, you have to complete
-	all information requested in the file called
-	REPORT.TXT. Be sure to answer in that
-	report any
-	// QUESTION:
-	parts found in the code below.
+  In addition to this, you have to complete
+  all information requested in the file called
+  REPORT.TXT. Be sure to answer in that
+  report any
+  // QUESTION:
+  parts found in the code below.
 
-	Sections marked
-	// CRUNCHY:
-	Are worth extra credit. How much bonus you get
-	depends on the quality of your extensions
-	or enhancements. Be sure to indicate in your
-	REPORT.TXT any extra work you have done.
+  Sections marked
+  // CRUNCHY:
+  Are worth extra credit. How much bonus you get
+  depends on the quality of your extensions
+  or enhancements. Be sure to indicate in your
+  REPORT.TXT any extra work you have done.
 
-	The code is commented, and the comments provide
-	information about what the program is doing and
-	what your task will be.
+  The code is commented, and the comments provide
+  information about what the program is doing and
+  what your task will be.
 
-	As a reminder. Your code must compile and run
-	on 'mathlab.utsc.utoronto.ca' under Linux. We will
-	not grade code that fails to compile or run
-	on these machines.
+  As a reminder. Your code must compile and run
+  on 'mathlab.utsc.utoronto.ca' under Linux. We will
+  not grade code that fails to compile or run
+  on these machines.
 
 Written by: F. Estrada, Jun 2011.
             Main loop/init derived from older 418
@@ -99,10 +99,10 @@ Written by: F. Estrada, Jun 2011.
 #define SPACE_SCALE 75
 #define SPEED_SCALE 2
 const float PI = 3.14159;
-int nBoids;				// Number of boids to dispay
-float Boid_Location[MAX_BOIDS][3];	// Pointers to dynamically allocated
-float Boid_Velocity[MAX_BOIDS][3];	// Boid position & velocity data
-float Boid_Color[MAX_BOIDS][3];	 	// RGB colour for each boid
+int nBoids;       // Number of boids to dispay
+float Boid_Location[MAX_BOIDS][3];  // Pointers to dynamically allocated
+float Boid_Velocity[MAX_BOIDS][3];  // Boid position & velocity data
+float Boid_Color[MAX_BOIDS][3];   // RGB colour for each boid
 float *modelVertices;                   // Imported model vertices
 int n_vertices;                         // Number of model vertices
 
@@ -110,8 +110,8 @@ int n_vertices;                         // Number of model vertices
 int windowID;               // Glut window ID (for display)
 GLUI *glui;                 // Glui window (for controls)
 int Win[2];                 // window (x,y) size
-float r_rule1;		    // Parameters of the boid update function.
-float r_rule2;		    // see updateBoid()
+float r_rule1;        // Parameters of the boid update function.
+float r_rule2;        // see updateBoid()
 float r_rule3;
 float k_rule1;
 float k_rule2;
@@ -142,8 +142,6 @@ float sign(float x){if (x>=0) return(1.0); else return(-1.0);}
 void updateBoid(int i);
 void drawBoid(int i);
 void HSV2RGB(float H, float S, float V, float *R, float *G, float *B);
-
-float getDistance(float p1[3], float p2[3]);
 
 // ******************** FUNCTIONS ************************
 
@@ -342,7 +340,7 @@ void initGlui()
       GLUI_Spinner *k1_spinner
           = glui->add_spinner("k_rule1", GLUI_SPINNER_FLOAT, &k_rule1);
     
-	  k1_spinner->set_speed(0.5);
+    k1_spinner->set_speed(0.5);
       k1_spinner->set_float_limits(0, 1, GLUI_LIMIT_CLAMP);
 
       // k_rule2
@@ -356,14 +354,14 @@ void initGlui()
       GLUI_Spinner *k3_spinner
           = glui->add_spinner("k_rule3", GLUI_SPINNER_FLOAT, &k_rule3);
       
-	  k3_spinner->set_speed(0.5);
+    k3_spinner->set_speed(0.5);
       k3_spinner->set_float_limits(0, 1, GLUI_LIMIT_CLAMP);
 
       // k_rule0
       GLUI_Spinner *k0_spinner
           = glui->add_spinner("k_rule0", GLUI_SPINNER_FLOAT, &k_rule0);
     
-	  k0_spinner->set_speed(0.5);
+    k0_spinner->set_speed(0.5);
       k0_spinner->set_float_limits(0, 1, GLUI_LIMIT_CLAMP);
 
 
@@ -371,21 +369,21 @@ void initGlui()
       GLUI_Spinner *r2_spinner
           = glui->add_spinner("r_rule2", GLUI_SPINNER_FLOAT, &r_rule2);
       
-	  r2_spinner->set_speed(0.5);
+    r2_spinner->set_speed(0.5);
       r2_spinner->set_float_limits(1, 15, GLUI_LIMIT_CLAMP);
 
       // r_rule3
       GLUI_Spinner *r3_spinner
           = glui->add_spinner("r_rule3", GLUI_SPINNER_FLOAT, &r_rule3);
     
-	  r3_spinner->set_speed(0.5);
+    r3_spinner->set_speed(0.5);
       r3_spinner->set_float_limits(10, 100, GLUI_LIMIT_CLAMP);
 
       // global_rot    
       GLUI_Spinner *gr_spinner
           = glui->add_spinner("global_rot", GLUI_SPINNER_FLOAT, &global_rot);
       
-	  gr_spinner->set_speed(5);
+    gr_spinner->set_speed(5);
       gr_spinner->set_float_limits(0, 360, GLUI_LIMIT_CLAMP);
 
     // Add "Quit" button
@@ -412,7 +410,7 @@ void WindowReshape(int w, int h)
     // working with the GL_PROJECTION matrix, which controls the
     // projection of objects onto the image.
     glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();			// Initialize with identity matrix
+    glLoadIdentity();     // Initialize with identity matrix
 
     // We will use perspective projection. This simulates a simple
     // pinhole camera.
@@ -422,9 +420,9 @@ void WindowReshape(int w, int h)
     // visible within the image window.
     gluPerspective(45,1,15,500);
     //              ^ ^  ^  ^
-    // FOV ---------| |  |  |		// See OpenGL reference for
-    // Aspect Ratio --|  |  |		// more details on using
-    // Near plane -------|  |		// gluPerspective()
+    // FOV ---------| |  |  |   // See OpenGL reference for
+    // Aspect Ratio --|  |  |   // more details on using
+    // Near plane -------|  |   // gluPerspective()
     // Far plane -----------|
 
     // The line below specifies the position and orientation of the
@@ -444,7 +442,7 @@ void WindowReshape(int w, int h)
     Win[0] = w;
     Win[1] = h;
 
-    // glutPostRedisplay()	// Is this needed?
+    // glutPostRedisplay()  // Is this needed?
 }
 
 void GL_Settings_Init()
@@ -564,8 +562,8 @@ void WindowDisplay(void)
 
     for (int i=0; i<nBoids; i++)
     {
-     updateBoid(i);		// Update position and velocity for boid i
-     drawBoid(i);		// Draw this boid
+     updateBoid(i);   // Update position and velocity for boid i
+     drawBoid(i);   // Draw this boid
     }
 
     // Make sure all OpenGL commands are executed
@@ -581,10 +579,6 @@ void WindowDisplay(void)
   // Tell glut window to update itself
   glutSetWindow(windowID);
   glutPostRedisplay();
-}
-
-float getDistance(float p1[3], float p2[3]){
-  return sqrt(pow(p1[0]-p2[0], 2)+pow(p1[1]-p2[1], 2)+pow(p1[2]-p2[2], 2));
 }
 
 void updateBoid(int i)
@@ -632,12 +626,32 @@ void updateBoid(int i)
  // if you run into trouble, come to office
  // hours.
  ///////////////////////////////////////////
-  float init_velocity[3];
-  init_velocity[0] = Boid_Velocity[i][0];
-  init_velocity[1] = Boid_Velocity[i][1];
-  init_velocity[2] = Boid_Velocity[i][2];
-  
-  float distances[nBoids];   
+  int close_boids = 0;
+
+  // Rule 1
+  float V1[3];
+  V1[0] = 0;
+  V1[1] = 0;
+  V1[2] = 0;
+
+  // Rule 2
+  float V2[3];
+  V2[0] = 0;
+  V2[1] = 0;
+  V2[2] = 0;
+
+  // Rule 3
+  float V3[3];
+  V3[0] = 0;
+  V3[1] = 0;
+  V3[2] = 0;
+
+  // Rule 0
+  float original_velocity[3];
+  original_velocity[0] = Boid_Velocity[i][0];
+  original_velocity[1] = Boid_Velocity[i][1];
+  original_velocity[2] = Boid_Velocity[i][2];
+
  ///////////////////////////////////////////
  //
  // TO DO:
@@ -684,38 +698,32 @@ void updateBoid(int i)
  ///////////////////////////////////////////
 
 
-  float center[3];
-  center[0] = 0;
-  center[1] = 0;
-  center[2] = 0;
-  int count = 0;
-
-  for (int j = 0; j < nBoids; j++){
-    if (j != i){
-      distances[j] = getDistance(Boid_Location[j], Boid_Location[i]);
-      if (distances[j] <= r_rule1){
-        center[0] += Boid_Location[j][0];
-        center[1] += Boid_Location[j][1];
-        center[2] += Boid_Location[j][2];
-        count++;
-      }
+// Get the center of mass for all boids within r_rule1
+for (int j=0; j < nBoids; j++) {
+  if (i != j) {
+    if (sqrt(pow(Boid_Location[j][0] - Boid_Location[i][0], 2) 
+    + pow(Boid_Location[j][1] - Boid_Location[i][1], 2) 
+    + pow(Boid_Location[j][2] - Boid_Location[i][2], 2)) <= r_rule1) {
+      
+      close_boids += 1;
+      V1[0] += Boid_Location[j][0];
+      V1[1] += Boid_Location[j][1];
+      V1[2] += Boid_Location[j][2];
     }
   }
-  
-  if (count == 0){
-    center[0] = Boid_Location[i][0];
-    center[1] = Boid_Location[i][1];
-    center[2] = Boid_Location[i][2];
-  }
-  else{
-    center[0] = center[0] / count;
-    center[1] = center[1] / count;
-    center[2] = center[2] / count;
-  }
-  
-  Boid_Velocity[i][0] += (center[0] - Boid_Location[i][0]) * k_rule1;
-  Boid_Velocity[i][1] += (center[1] - Boid_Location[i][1]) * k_rule1;
-  Boid_Velocity[i][2] += (center[2] - Boid_Location[i][2]) * k_rule1;
+}
+
+if (close_boids != 0) {  
+  // Compute center of mass
+  V1[0] = V1[0] / close_boids;
+  V1[1] = V1[1] / close_boids;
+  V1[2] = V1[2] / close_boids;
+
+  // Move towards center of mass
+  Boid_Velocity[i][0] += (V1[0] - Boid_Location[i][0]) * k_rule1;
+  Boid_Velocity[i][1] += (V1[1] - Boid_Location[i][1]) * k_rule1;
+  Boid_Velocity[i][2] += (V1[2] - Boid_Location[i][2]) * k_rule1;
+}
 
  ///////////////////////////////////////////
  //
@@ -745,16 +753,19 @@ void updateBoid(int i)
  //  0 <= k_rule2 <= 1
  ///////////////////////////////////////////
 
-  for (int j = 0; j < nBoids; j++){
-    if (j != i){
-      if (distances[j] <= r_rule2){
-        Boid_Velocity[i][0] -=  k_rule2 * (Boid_Location[j][0] - Boid_Location[i][0]);
-        Boid_Velocity[i][1] -=  k_rule2 * (Boid_Location[j][1] - Boid_Location[i][1]);
-        Boid_Velocity[i][2] -=  k_rule2 * (Boid_Location[j][2] - Boid_Location[i][2]);
-      }
+for (int j=0; j < nBoids; j++) {
+  if (i != j) {
+    V2[0] = Boid_Location[j][0] - Boid_Location[i][0];
+    V2[1] = Boid_Location[j][1] - Boid_Location[i][1];
+    V2[2] = Boid_Location[j][2] - Boid_Location[i][2];
+
+    if (sqrt(pow(V2[0], 2) + pow(V2[1], 2) + pow(V2[2], 2)) <= r_rule2) {
+      Boid_Velocity[i][0] -= V2[0] * k_rule2;
+      Boid_Velocity[i][1] -= V2[1] * k_rule2;
+      Boid_Velocity[i][2] -= V2[2] * k_rule2;
     }
   }
-
+}
 
  ///////////////////////////////////////////
  //
@@ -784,36 +795,34 @@ void updateBoid(int i)
  // 0 <= k_rule3 <= 1
  ///////////////////////////////////////////
 
-  float v3[3];
-  v3[0] = 0;
-  v3[1] = 0;
-  v3[2] = 0;
-  count = 0;
-  
-  for (int j = 0; j < nBoids; j++){
-    if ((j != i) and (distances[j] <= r_rule3)){
-      v3[0] += Boid_Velocity[j][0];
-      v3[1] += Boid_Velocity[j][1];
-      v3[2] += Boid_Velocity[j][2];
-      count++;
+// Get average velocity within r_rule3
+close_boids = 0;
+for (int j=0; j < nBoids; j++) {
+  if (i != j) {
+
+    if (sqrt(pow(Boid_Location[j][0] - Boid_Location[i][0], 2) 
+      + pow(Boid_Location[j][1] - Boid_Location[i][1], 2) 
+      + pow(Boid_Location[j][2] - Boid_Location[i][2], 2)) <= r_rule3) {
+
+      close_boids += 1;
+      V3[0] += Boid_Velocity[j][0];
+      V3[1] += Boid_Velocity[j][1];
+      V3[2] += Boid_Velocity[j][2];
     }
   }
-  
-  if (count == 0){
-    v3[0] = Boid_Velocity[i][0];
-    v3[1] = Boid_Velocity[i][1];
-    v3[2] = Boid_Velocity[i][2];
-  }
-  else{
-    v3[0] = v3[0] / count;
-    v3[1] = v3[1] / count;
-    v3[2] = v3[2] / count;
-  }
-  
-  Boid_Velocity[i][0] += k_rule3 * (v3[0] - init_velocity[0]);
-  Boid_Velocity[i][1] += k_rule3 * (v3[1] - init_velocity[1]);
-  Boid_Velocity[i][2] += k_rule3 * (v3[2] - init_velocity[2]);
+}
 
+if (close_boids != 0) {  
+  // Compute average velocity 
+  V3[0] = V3[0] / close_boids;
+  V3[1] = V3[1] / close_boids;
+  V3[2] = V3[2] / close_boids;
+
+  // Update boid velocity
+  Boid_Velocity[i][0] += k_rule3 * V3[0];
+  Boid_Velocity[i][1] += k_rule3 * V3[1];
+  Boid_Velocity[i][2] += k_rule3 * V3[2];
+}
  ///////////////////////////////////////////
  // Enforcing bounds on motion
  //
@@ -897,9 +906,9 @@ void updateBoid(int i)
  //  The speed clamping used here was determined
  // 'experimentally', i.e. I tweaked it by hand!
  ///////////////////////////////////////////
- Boid_Velocity[i][0]=sign(Boid_Velocity[i][0])*sqrt(fabs(Boid_Velocity[i][0])/5);
- Boid_Velocity[i][1]=sign(Boid_Velocity[i][1])*sqrt(fabs(Boid_Velocity[i][1])/5);
- Boid_Velocity[i][2]=sign(Boid_Velocity[i][2])*sqrt(fabs(Boid_Velocity[i][2])/5);
+ Boid_Velocity[i][0]=sign(Boid_Velocity[i][0])*sqrt(fabs(Boid_Velocity[i][0]))/10;
+ Boid_Velocity[i][1]=sign(Boid_Velocity[i][1])*sqrt(fabs(Boid_Velocity[i][1]))/10;
+ Boid_Velocity[i][2]=sign(Boid_Velocity[i][2])*sqrt(fabs(Boid_Velocity[i][2]))/10;
 
  ///////////////////////////////////////////
  //
@@ -924,9 +933,9 @@ void updateBoid(int i)
  // QUESTION: Why add inertia at the end and
  //  not at the beginning?
  ///////////////////////////////////////////
-  Boid_Velocity[i][0] += k_rule0 * init_velocity[0];
-  Boid_Velocity[i][1] += k_rule0 * init_velocity[1];
-  Boid_Velocity[i][2] += k_rule0 * init_velocity[2];
+ Boid_Velocity[i][0] -= k_rule0 * original_velocity[0];
+ Boid_Velocity[i][1] -= k_rule0 * original_velocity[1];
+ Boid_Velocity[i][2] -= k_rule0 * original_velocity[2];
 
  ///////////////////////////////////////////
  //
@@ -1043,18 +1052,18 @@ void drawBoid(int i)
  // marks for using these simple spheres as your
  // boid shapes.
 
- GLUquadric *my_quad;	// Define a quadric() object
-			// We'll talk about quadrics
-			// later! for now suffice it
-			// to say they are a family
-			// of parametric surfaces
-			// whose shape can be controlled
-			// by changing a couple parameters.
-			// Among the things you can do
-			// with quadrics are spheres,
-			// discs, and cylinders.
+ GLUquadric *my_quad; // Define a quadric() object
+      // We'll talk about quadrics
+      // later! for now suffice it
+      // to say they are a family
+      // of parametric surfaces
+      // whose shape can be controlled
+      // by changing a couple parameters.
+      // Among the things you can do
+      // with quadrics are spheres,
+      // discs, and cylinders.
 
- my_quad=gluNewQuadric();	// Create a new quadric
+ my_quad=gluNewQuadric(); // Create a new quadric
 
  // Remember the GL_MODELVIEW matrix that determines the
  // transformations that will be applied to objects
@@ -1072,19 +1081,18 @@ void drawBoid(int i)
  // you can use the Boid_Color[][] array instead if you
  // want to change boid colours yourself.
 
- glColor4f(1,.35,.1,1);	// This specifies colour as R,G,B,alpha.
-			// the alpha component specifies transparency.
-			// if alpha=1 the colour is completely opaque,
-			// if alpha=0 it is completely transparent
-			// (will be invisible!)
+ glColor4f(1,.35,.1,1); // This specifies colour as R,G,B,alpha.
+      // the alpha component specifies transparency.
+      // if alpha=1 the colour is completely opaque,
+      // if alpha=0 it is completely transparent
+      // (will be invisible!)
 
- glPushMatrix();	// Save current transformation matrix
-			// Apply necessary transformations to this boid
+ glPushMatrix();  // Save current transformation matrix
+      // Apply necessary transformations to this boid
   glTranslatef(Boid_Location[i][0],Boid_Location[i][1],Boid_Location[i][2]);
 
       glRotatef(290.0, 1.0, 0.0, 0.0);
       glBegin(GL_TRIANGLE_STRIP);
-      /* left wing */
       glColor3f(Boid_Color[i][0],Boid_Color[i][1],Boid_Color[i][2]);
       glVertex3f(-7.0, 0.0, 2.0);
       glVertex3f(-1.0, 0.0, 3.0);
@@ -1093,8 +1101,8 @@ void drawBoid(int i)
       glVertex3f(7.0, 0.0, 2.0);
       glEnd();
 
- glPopMatrix();		// Restore transformation matrix so it's
-			// ready for the next boid.
+ glPopMatrix();   // Restore transformation matrix so it's
+      // ready for the next boid.
 
  ///////////////////////////////////////////
  // CRUNCHY:
